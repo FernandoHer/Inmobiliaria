@@ -4,9 +4,10 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useContext } from 'react';
 import { HomeScreen } from '../screens/HomeScreen';
+import { HouseDetail } from '../screens/HouseDetail';
+
 import { CommercialDetail } from '../screens/CommercialDetail';
 import { CreateProperty } from '../screens/CreateProperty';
-import { HouseDetail } from '../screens/HouseDetail';
 import { LandDetail } from '../screens/LandDetail';
 import { PicturesScreen } from '../screens/PicturesScreen';
 import { PropertyDetails } from '../screens/PropertyDetails';
@@ -29,12 +30,13 @@ export const Navigator = () => {
               headerShown: false,
             }}
           >
+            <Stack.Screen name="PicturesScreen" component={PicturesScreen} />
             <Stack.Screen name="HomeScreen" component={HomeScreen} />
             <Stack.Screen name="HouseDetail" component={HouseDetail} />
             <Stack.Screen name="CommercialDetail" component={CommercialDetail} />
             <Stack.Screen name="CreateProperty" component={CreateProperty} />
             <Stack.Screen name="LandDetail" component={LandDetail} />
-            <Stack.Screen name="PicturesScreen" component={PicturesScreen} />
+
             <Stack.Screen name="PropertyDetails" component={PropertyDetails} />
           </Stack.Navigator>
       </NavigationContainer>

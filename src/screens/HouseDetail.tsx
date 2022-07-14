@@ -1,23 +1,24 @@
 /* eslint-disable prettier/prettier *//* eslint-disable react-native/no-inline-styles */
 
 
-import React, { useContext }  from 'react';
-import { TextInput, View, StyleSheet, KeyboardAvoidingView, Platform, Text, Button } from 'react-native';
+import React  from 'react';
+import {  View, StyleSheet, KeyboardAvoidingView, Platform, Text, Button, TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import DropdownComponent from '../components/Dropdown';
 import { HeaderTitle } from '../components/HeaderTitle';
-import { RadioButton } from '../components/RadioButtom';
-import { ThemeContext } from '../context/themeContext/ThemeContext';
-
 import { useForm } from '../hooks/useForms';
+import { data, menuItems, menuYes, meters } from '../data/appData';
+import { CustomDropdown } from '../customComponents/CustomDropdown';
+import { CustomFlatList } from '../customComponents/CustomFlatList';
+import { CustomTextInput } from '../customComponents/CustomTextInput';
+import { StackScreenProps } from '@react-navigation/stack';
+
+
+interface Props extends StackScreenProps<any,any> {}
 
 
 
+export const HouseDetail = ({navigation}:Props) => {
 
-export const HouseDetail = () => {
-
-
-  const {theme} = useContext(ThemeContext);
   const { form, onChange} = useForm({
         antiguedad: '',
         precio: '',
@@ -39,7 +40,11 @@ export const HouseDetail = () => {
         <View >
 
             <View style={stylesInput.header}>
+            <TouchableOpacity
+                onPress={()=> navigation.pop()}
+            >
               <Text style={stylesInput.return}>Atrás</Text>
+            </TouchableOpacity>
               <Text style={stylesInput.title}>Crear Propiedad</Text>
             </View>
 
@@ -48,77 +53,126 @@ export const HouseDetail = () => {
               <Text style={{ fontSize:20, fontWeight:'bold', marginTop:20 }}>Vivienda</Text>
             </View>
 
+            {/* Antiguedad */}
 
             <View style={stylesInput.dropDown}>
                 <Text style={stylesInput.textOptions}>Antiguedad</Text>
-                <DropdownComponent/>
+                <View>
+                  <CustomDropdown
+                      name= "antiguedad"
+                      labelf="label"
+                      valuef="valor"
+                      funOnChange={(a) => onChange(a,'antiguedad')}
+                      data={data}
+                      isFocus
+                  />
+              </View>
             </View>
 
+            {/* Precio del Inmueble */}
 
             <View style={stylesInput.priceStyle}>
               <Text style={stylesInput.textOptions}>Precio (USD)</Text>
-              <TextInput
-                  style = {{
-                    flex: 1,
-                    ...stylesInput.inputStyles,
-                    height: 40,
-                    color: theme.colors.text,
-                    borderColor: theme.colors.border,
-                  }}
-                  placeholder = "Valor"
-                  placeholderTextColor={theme.divideColor}
-                  autoCorrect = { false }
-                  autoCapitalize = "words"
-                  onChangeText={(value) => onChange( value, 'precio')}
+              <CustomTextInput
+                funOnChange={(a) => onChange(a,'precio')}
+                name="precio"
               />
             </View>
 
+            {/* Número de Cuartos */}
 
             <View style={stylesInput.optionsStyle}>
               <View style={{width:170}}>
                 <Text style={stylesInput.textOptions}>N Cuartos</Text>
               </View>
-              <RadioButton/>
+              <View>
+                <CustomFlatList
+                  data = {menuItems}
+                  name = "nCuartos"
+                  funOnChange={(a) => onChange(a, 'nCuartos')}
+                />
+              </View>
             </View>
+
+            {/* Número de Baños */}
 
             <View style={stylesInput.optionsStyle}>
               <View  style={{width:170}}>
                 <Text style={stylesInput.textOptions}>N Baños</Text>
               </View>
-
-              <RadioButton/>
+              <View>
+                <CustomFlatList
+                  data = {menuItems}
+                  name = "nBanos"
+                  funOnChange={(a) => onChange(a, 'nBanos')}
+                />
+              </View>
             </View>
+
+            {/* Número de Parqueaderos */}
 
             <View style={stylesInput.optionsStyle}>
               <View  style={{width:170}}>
                 <Text style={stylesInput.textOptions}>N Parqueaderos</Text>
               </View>
-
-              <RadioButton/>
+              <View>
+                <CustomFlatList
+                    data = {menuItems}
+                    name = "nParqueaderos"
+                    funOnChange={(a) => onChange(a, 'nParqueaderos')}
+                  />
+              </View>
             </View>
+
+            {/* Número de metros */}
 
             <View style={stylesInput.dropDown}>
               <Text style={stylesInput.textOptions}>Metraje</Text>
-              <DropdownComponent/>
+              <View>
+              <CustomDropdown
+                      name= "metraje"
+                      labelf="label"
+                      valuef="valor"
+                      funOnChange={(a) => onChange(a,'metraje')}
+                      data={meters}
+                      isFocus
+                  />
+              </View>
             </View>
+
+            {/* Pet Frendly */}
 
             <View style={stylesInput.optionsStyle}>
               <View style={{width:250}}>
                 <Text style={stylesInput.textOptions}>Pet Friendly</Text>
               </View>
-              <RadioButton/>
+              <View>
+                <CustomFlatList
+                  data = {menuYes}
+                  name = "petFrendly"
+                  funOnChange={(a) => onChange(a, 'petFrendly')}
+                />
+              </View>
             </View>
+
+            {/* Es urbanización */}
 
             <View style={stylesInput.optionsStyle}>
               <View style={{width:250}}>
                 <Text style={stylesInput.textOptions}>Dentro de Urbanización / Conjunto </Text>
               </View>
-              <RadioButton/>
+              <View>
+                <CustomFlatList
+                  data = {menuYes}
+                  name = "conjunto"
+                  funOnChange={(a) => onChange(a, 'conjunto')}
+                />
+              </View>
             </View>
 
             <Button
               title="Siguiente"
-              onPress= {() => console.log('hola mundo')}
+              onPress= {() => navigation.navigate('CreateProperty')}
             />
 
             <HeaderTitle title={ JSON.stringify( form, null, 3)}/>
@@ -147,31 +201,10 @@ const stylesInput = StyleSheet.create({
       color: 'white',
       fontSize: 22,
     },
-    container:{
-      width:100,
-      height:50,
-    },
     textOptions:{
       marginHorizontal:20,
       fontSize: 18,
       fontWeight: '500',
-    },
-    inputStyles:{
-        borderWidth: 1,
-        fontSize:20,
-        height: 50,
-        paddingHorizontal: 10,
-        borderRadius: 0,
-        marginVertical: 8,
-    },
-    switchRow:{
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      marginVertical: 8,
-    },
-    switchText:{
-        fontSize: 25,
     },
     dropDown:{
       flexDirection:'row',
